@@ -1,0 +1,40 @@
+version: '3'
+
+services:
+  db:
+    image: mysql:5.7
+    container_name: db
+    environment:
+      MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
+      MYSQL_DATABASE: "${MYSQL_DATABASE}"
+      MYSQL_USER: "${MYSQL_USER}"
+      MYSQL_PASSWORD: "${MYSQL_PASSWORD}"
+      MYSQL_ROOT_HOST: "%"
+    ports:
+      - "6033:3306"
+    volumes:
+      - ./docker/volume/mysql:/var/lib/mysql
+      - ./docker/config/db/data/:/docker-entrypoint-initdb.d
+    healthcheck:
+      test: mysql --user=$$MYSQL_USER --password=$$MYSQL_PASSWORD -e 'SHOW DATABASES;'
+      timeout: 30s
+      retries: 10
+      interval: 10s
+  api:
+    image: api
+    build:
+      context: ./
+      dockerfile: ./docker/config/api/Dockerfile
+    container_name: api
+    environment:
+      MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
+      MYSQL_DATABASE: "${MYSQL_DATABASE}"
+      MYSQL_USER: "${MYSQL_USER}"
+      MYSQL_PASSWORD: "${MYSQL_PASSWORD}"
+      MYSQL_ROOT_HOST: "%"
+    ports:
+      - 8080:8080
+      - 5005:5005
+    depends_on:
+      db:
+        condition: service_healthy

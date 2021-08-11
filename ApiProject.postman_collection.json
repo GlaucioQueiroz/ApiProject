@@ -1,0 +1,220 @@
+{
+	"info": {
+		"_postman_id": "4df9bc2f-8f26-4140-80c1-16aedbf63f41",
+		"name": "ApiProject",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Operacoes",
+			"item": [
+				{
+					"name": "ALL",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Environment}}:{{Port}}/customer",
+							"host": [
+								"{{Environment}}"
+							],
+							"port": "{{Port}}",
+							"path": [
+								"customer"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "BY ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{Environment}}:{{Port}}/customer/1",
+							"host": [
+								"{{Environment}}"
+							],
+							"port": "{{Port}}",
+							"path": [
+								"customer",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ADD",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"cpf\":444444,\r\n   \"nome\":\"teste\",\r\n \t\t\"logradouro\":\"logradoru\",\r\n \t\t\"bairro\":\"bairro\",\r\n \t\t\"numero\":\"235\",\r\n \t\t\"complemento\":\"complemtno\",\r\n \t\t\"cep\":\"17400000\",\r\n \t\t\"cidade\":\"garca\",\r\n \t\t\"estado\":\"sp\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Environment}}:{{Port}}/customer",
+							"host": [
+								"{{Environment}}"
+							],
+							"port": "{{Port}}",
+							"path": [
+								"customer"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{Environment}}:{{Port}}/customer/1",
+							"host": [
+								"{{Environment}}"
+							],
+							"port": "{{Port}}",
+							"path": [
+								"customer",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "EDIT",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"cpf\":444444,\r\n   \"nome\":\"teste\",\r\n \t\t\"logradouro\":\"logradoru\",\r\n \t\t\"bairro\":\"bairro\",\r\n \t\t\"numero\":\"235\",\r\n \t\t\"complemento\":\"complemtno\",\r\n \t\t\"cep\":\"17400000\",\r\n \t\t\"cidade\":\"garca\",\r\n \t\t\"estado\":\"sp\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Environment}}:{{Port}}/customer/1",
+							"host": [
+								"{{Environment}}"
+							],
+							"port": "{{Port}}",
+							"path": [
+								"customer",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{token}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"const echoPostRequest = {",
+							"  url: pm.environment.get('Environment') + ':' + pm.environment.get('Port') + '/login',",
+							"  method: 'POST',",
+							"  body: {",
+							"    mode: 'application/json',",
+							"    raw: JSON.stringify(",
+							"        {",
+							"        \t\"login\":pm.environment.get('Login'),",
+							"            \"password\":pm.environment.get('Password')",
+							"        })",
+							"  }",
+							"};",
+							"",
+							"var getToken = true;",
+							"",
+							"if (!pm.environment.get('accessTokenExpiry') || ",
+							"    !pm.environment.get('token')) {",
+							"    console.log('Token or expiry date are missing')",
+							"} else if (pm.environment.get('accessTokenExpiry') <= (new Date()).getTime()) {",
+							"    console.log('Token is expired')",
+							"} else {",
+							"    getToken = false;",
+							"    console.log('Token and expiry date are all good');",
+							"}",
+							"",
+							"//if (getToken === true) {",
+							"    pm.sendRequest(echoPostRequest, function (err, res) {",
+							"    console.log(err ? err : res.json());",
+							"        if (err === null) {",
+							"            console.log('Saving the token and expiry date')",
+							"            var responseJson = res.json();",
+							"            pm.environment.set('token', responseJson.Token)",
+							"    ",
+							"            var expiryDate = new Date();",
+							"            expiryDate.setSeconds(expiryDate.getSeconds() + responseJson.ExpiresIn);",
+							"            pm.environment.set('accessTokenExpiry', expiryDate.getTime());",
+							"        }",
+							"    });",
+							"//}"
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "TOKEN",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"login\": \"{{Login}}\",\r\n    \"password\": \"{{Password}}\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{Environment}}:{{Port}}/login",
+					"host": [
+						"{{Environment}}"
+					],
+					"port": "{{Port}}",
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
