@@ -24,5 +24,5 @@ Postman Configuration Files
 
 | Plugin | README |
 | ------ | ------ |
-| Collection | [https://github.com/GlaucioQueiroz/ApiProject/blob/main/ApiProject.postman_collection.json][PlDb] |
-| Environment Config | [https://github.com/GlaucioQueiroz/ApiProject/blob/main/ConfigApiProject.postman_environment.json][PlGh] |
+| Collection | https://github.com/GlaucioQueiroz/ApiProject/blob/main/ApiProject.postman_collection.json |
+| Environment Config | https://github.com/GlaucioQueiroz/ApiProject/blob/main/ConfigApiProject.postman_environment.json |
